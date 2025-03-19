@@ -1,5 +1,10 @@
 ﻿using FitnessTracker.Server.Database;
+using FitnessTracker.Server.DTO;
+using FitnessTracker.Server.Models;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Linq;
+using System.Reflection;
 
 namespace FitnessTracker.Server.Controllers
 {
@@ -16,31 +21,57 @@ namespace FitnessTracker.Server.Controllers
 
         [HttpGet]
         [Route("getExercises")]
-        public IActionResult GetExercises() //TODO: Add logic
+        public IActionResult GetExercises()
         {
-            return Ok();
+            var exercises = _context.exercises.ToList(); //henter alle rækker fra Exercises-tabellen og returnerer dem som en liste.
+            return Ok(exercises);
         }
 
         [HttpGet]
         [Route("getExercise/{id}")]
-        public IActionResult GetExercise(int id) //TODO: Add logic
+        public IActionResult GetExercise(int id) 
         {
-            return Ok();
+            var UniqueExercise = _context.exercises.FirstOrDefault(e => e.Exercise_Id == id);
+            if(UniqueExercise == null)
+            {
+                return NotFound();
+            }
+            return Ok(UniqueExercise);
         }
 
 
-
-        [HttpPut]
-        [Route("addExercise")]
-        public IActionResult AddExercise() //TODO: Add logic
-        {
-            return Ok();
-        }
 
         [HttpPost]
+        [Route("addExercise")]
+        public IActionResult AddExercise([FromBody] ExerciseDTO exerciseDTO)
+        {
+            if(exerciseDTO == null)
+            {
+                return BadRequest();
+            }
+
+            var exercise = new Exercise
+            {
+                ExerciseName = exerciseDTO.ExerciseName,
+                Set = exerciseDTO.Set,
+                Repetitions = exerciseDTO.Repetitions
+            };
+
+            _context.exercises.Add(exercise);
+            _context.SaveChanges();
+
+            return CreatedAtAction(nameof(GetExercise), new { id = exercise.Exercise_Id }, exercise);
+
+            /*nameof(GetExercise): Fortæller, at vi peger på GetExercise-metoden i controlleren.
+            new { id = exercise.Exercise_Id }: Angiver route-parametrene(hvilket id den nye ressource har).
+            exercise: Sender den oprettede ressource(det nye objekt) tilbage til klienten.*/
+        }
+
+        [HttpPut]
         [Route("updateExercise")]
         public IActionResult UpdateExercise() //TODO: Add logic
         {
+            
             return Ok();
         }
 

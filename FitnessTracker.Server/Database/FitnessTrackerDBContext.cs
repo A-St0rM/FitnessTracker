@@ -14,7 +14,7 @@ namespace FitnessTracker.Server.Database
         public DbSet<WorkoutDay> workoutDays { get; set; }
         public DbSet<WorkoutProgram> workoutPrograms { get; set; }
         public DbSet<Exercise> exercises { get; set; }
-
+        public DbSet<ExerciseWorkoutProgram> exerciseWorkoutPrograms { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

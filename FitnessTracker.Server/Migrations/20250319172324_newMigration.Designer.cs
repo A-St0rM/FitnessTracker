@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FitnessTracker.Server.Migrations
 {
     [DbContext(typeof(FitnessTrackerDBContext))]
-    [Migration("20250318185528_AddedMoreTables")]
-    partial class AddedMoreTables
+    [Migration("20250319172324_newMigration")]
+    partial class newMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
