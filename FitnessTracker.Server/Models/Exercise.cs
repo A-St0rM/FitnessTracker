@@ -7,9 +7,17 @@ namespace FitnessTracker.Server.Models
 
         [Key]
         public int Exercise_Id { get; set; }
+
+        [Required]
         public string ExerciseName { get; set; }
+
+        [Required]
         public int Set { get; set; }
+
+        [Required]
         public int Repetitions { get; set; }
+
+        public ExerciseWorkoutProgram ExerciseWorkoutProgram { get; set; }
 
         public Exercise(string exerciseName, int set, int repetitions)
         {

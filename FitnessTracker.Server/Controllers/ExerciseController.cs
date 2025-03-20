@@ -69,10 +69,27 @@ namespace FitnessTracker.Server.Controllers
 
         [HttpPut]
         [Route("updateExercise")]
-        public IActionResult UpdateExercise() //TODO: Add logic
+        public IActionResult UpdateExercise([FromBody] Exercise exercise)
         {
-            
-            return Ok();
+            if (exercise == null)
+            {
+                return BadRequest();
+            }
+
+            var existExercise = _context.exercises.FirstOrDefault(e => e.Exercise_Id == exercise.Exercise_Id);
+            if (existExercise == null)
+            {
+                return NotFound();
+            }
+
+            existExercise.ExerciseName = exercise.ExerciseName;
+            existExercise.Set = exercise.Set;
+            existExercise.Repetitions = exercise.Repetitions;
+
+            _context.exercises.Update(existExercise);
+            _context.SaveChanges();
+
+            return Ok(existExercise);
         }
 
 
@@ -80,7 +97,18 @@ namespace FitnessTracker.Server.Controllers
         [Route("deleteExercise")]
         public IActionResult DeleteExercise(int id) //TODO: Add logic
         {
-            return Ok();
+
+            var exercise = _context.exercises.FirstOrDefault(e => e.Exercise_Id == id);
+
+            if(exercise == null)
+            {
+                return NotFound();
+            }
+
+            _context.exercises.Remove(exercise);
+            _context.SaveChanges();
+
+            return NoContent(); //Returnerer NoContent() (HTTP 204), operationen var en succes, men intet data sendes tilbage.
         }
 
 

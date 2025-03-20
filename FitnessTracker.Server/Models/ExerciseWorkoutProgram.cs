@@ -8,13 +8,15 @@ namespace FitnessTracker.Server.Models
         [Key]
         public int ExerciseWorkoutProgram_Id { get; set; }
 
-        [Required]
-        [ForeignKey("Exercise_Id")]
+        // Foreign Key to Exercise
         public int Exercise_Id { get; set; }
+        public Exercise Exercise { get; set; }  
 
-        [Required]
-        [ForeignKey("WorkoutProgram_Id")]
+        // Foreign Key to WorkoutProgram
         public int WorkoutProgram_Id { get; set; }
+        public WorkoutProgram WorkoutProgram { get; set; }
+
+        public ICollection<Exercise> Exercises { get; set; } = new List<Exercise>();
 
         public ExerciseWorkoutProgram(int exercise_Id, int workoutProgram_Id)
         {
@@ -22,9 +24,6 @@ namespace FitnessTracker.Server.Models
             this.WorkoutProgram_Id = workoutProgram_Id;
         }
 
-        public ExerciseWorkoutProgram()
-        {
-        }
-
+        public ExerciseWorkoutProgram() { }
     }
 }
