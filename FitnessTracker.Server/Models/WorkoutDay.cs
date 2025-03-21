@@ -21,6 +21,7 @@ namespace FitnessTracker.Server.Models
         {
             this.Date = date;
             this.WorkoutProgram = workoutProgram;
+            this.WorkoutProgram_Id = workoutProgram.WorkoutProgram_Id;
         }
 
         public WorkoutDay()

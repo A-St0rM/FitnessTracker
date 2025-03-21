@@ -18,7 +18,17 @@ namespace FitnessTracker.Server.Database
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<WorkoutDay>()
+                .HasOne(wd => wd.WorkoutProgram)
+                .WithMany(wp => wp.WorkoutDays)
+                .HasForeignKey(wd => wd.WorkoutProgram_Id)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<WorkoutProgram>()
+                .HasOne(wp => wp.ExerciseWorkoutProgram)
+                .WithMany(ewp => ewp.WorkoutPrograms)
+                .HasForeignKey(wp => wp.ExerciseWorkoutProgram_Id)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
