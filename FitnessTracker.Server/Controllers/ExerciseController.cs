@@ -95,7 +95,7 @@ namespace FitnessTracker.Server.Controllers
 
         [HttpDelete]
         [Route("deleteExercise")]
-        public IActionResult DeleteExercise(int id) //TODO: Add logic
+        public IActionResult DeleteExercise(int id)
         {
 
             var exercise = _context.exercises.FirstOrDefault(e => e.Exercise_Id == id);

@@ -40,7 +40,7 @@ namespace FitnessTracker.Server.Controllers
         }
 
         [HttpPost]
-        [Route("getWorkoutDay")]
+        [Route("addWorkoutDay")]
         public IActionResult AddWorkoutDay([FromBody] WorkoutDayDTO workoutDayDTO)
         {
 
@@ -63,12 +63,47 @@ namespace FitnessTracker.Server.Controllers
 
 
         [HttpPut]
-        [Route("UpdateWorkoutDay")]
-        public IActionResult getWorkoutDays()
+        [Route("UpdateWorkoutDay")] 
+        public IActionResult getWorkoutDays([FromBody] WorkoutDay workoutDay)
         {
-            var workoutDays = _context.workoutDays.ToList();
-            return Ok(workoutDays);
+            if (workoutDay == null)
+            {
+                return BadRequest();
+            }
+
+            var existWorkoutDay = _context.workoutDays.FirstOrDefault(ew => ew.WorkoutDay_Id == workoutDay.WorkoutDay_Id);
+            if (existWorkoutDay == null)
+            {
+                return NotFound();
+            }
+
+            existWorkoutDay.Date = workoutDay.Date;
+            
+          
+            _context.workoutDays.Update(existWorkoutDay);
+            _context.SaveChanges();
+
+            return Ok(existWorkoutDay);
         }
+
+
+        [HttpDelete]
+        [Route("deleteWorkoutDays")]
+        public IActionResult DeleteWorkoutDays(int id)
+        {
+            var existWorkoutDay = _context.workoutDays.FirstOrDefault(ew => ew.WorkoutDay_Id == id);
+
+            if (existWorkoutDay == null)
+            {
+                return NotFound();
+            }
+
+            _context.workoutDays.Remove(existWorkoutDay);
+            _context.SaveChanges();
+
+            return NoContent();
+        }
+
 
     }
 }
