@@ -8,24 +8,19 @@ namespace FitnessTracker.Server.Models
         [Key]
         public int WorkoutDay_Id { get; set; }
 
-        [ForeignKey("WorkoutProgram_Id")]
-        [Required]
         public int WorkoutProgram_Id { get; set; }
+        public WorkoutProgram WorkoutProgram { get; set; }
+
         [Required]
         public DateOnly Date { get; set; }
 
-        [Required]
-        public WorkoutProgram WorkoutProgram { get; set; }
-
         public WorkoutDay(DateOnly date, WorkoutProgram workoutProgram)
         {
-            this.Date = date;
-            this.WorkoutProgram = workoutProgram;
-            this.WorkoutProgram_Id = workoutProgram.WorkoutProgram_Id;
+            Date = date;
+            WorkoutProgram = workoutProgram;
+            WorkoutProgram_Id = workoutProgram.WorkoutProgram_Id;
         }
 
-        public WorkoutDay()
-        {
-        }
+        public WorkoutDay() { }
     }
 }

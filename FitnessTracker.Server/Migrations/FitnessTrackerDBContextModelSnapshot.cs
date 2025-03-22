@@ -40,12 +40,7 @@ namespace FitnessTracker.Server.Migrations
                     b.Property<int>("Set")
                         .HasColumnType("int");
 
-                    b.Property<int?>("WorkoutProgram_Id")
-                        .HasColumnType("int");
-
                     b.HasKey("Exercise_Id");
-
-                    b.HasIndex("WorkoutProgram_Id");
 
                     b.ToTable("exercises");
                 });
@@ -65,6 +60,10 @@ namespace FitnessTracker.Server.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("ExerciseWorkoutProgram_Id");
+
+                    b.HasIndex("Exercise_Id");
+
+                    b.HasIndex("WorkoutProgram_Id");
 
                     b.ToTable("exerciseWorkoutPrograms");
                 });
@@ -128,17 +127,29 @@ namespace FitnessTracker.Server.Migrations
                     b.ToTable("workoutPrograms");
                 });
 
-            modelBuilder.Entity("FitnessTracker.Server.Models.Exercise", b =>
+            modelBuilder.Entity("FitnessTracker.Server.Models.ExerciseWorkoutProgram", b =>
                 {
-                    b.HasOne("FitnessTracker.Server.Models.WorkoutProgram", null)
-                        .WithMany("Exercises")
-                        .HasForeignKey("WorkoutProgram_Id");
+                    b.HasOne("FitnessTracker.Server.Models.Exercise", "Exercise")
+                        .WithMany("ExerciseWorkoutPrograms")
+                        .HasForeignKey("Exercise_Id")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("FitnessTracker.Server.Models.WorkoutProgram", "WorkoutProgram")
+                        .WithMany("ExerciseWorkoutPrograms")
+                        .HasForeignKey("WorkoutProgram_Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Exercise");
+
+                    b.Navigation("WorkoutProgram");
                 });
 
             modelBuilder.Entity("FitnessTracker.Server.Models.WorkoutDay", b =>
                 {
                     b.HasOne("FitnessTracker.Server.Models.WorkoutProgram", "WorkoutProgram")
-                        .WithMany()
+                        .WithMany("WorkoutDays")
                         .HasForeignKey("WorkoutProgram_Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -146,9 +157,16 @@ namespace FitnessTracker.Server.Migrations
                     b.Navigation("WorkoutProgram");
                 });
 
+            modelBuilder.Entity("FitnessTracker.Server.Models.Exercise", b =>
+                {
+                    b.Navigation("ExerciseWorkoutPrograms");
+                });
+
             modelBuilder.Entity("FitnessTracker.Server.Models.WorkoutProgram", b =>
                 {
-                    b.Navigation("Exercises");
+                    b.Navigation("ExerciseWorkoutPrograms");
+
+                    b.Navigation("WorkoutDays");
                 });
 #pragma warning restore 612, 618
         }

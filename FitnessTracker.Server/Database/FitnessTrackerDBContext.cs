@@ -18,17 +18,27 @@ namespace FitnessTracker.Server.Database
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // WorkoutDay → WorkoutProgram
             modelBuilder.Entity<WorkoutDay>()
                 .HasOne(wd => wd.WorkoutProgram)
                 .WithMany(wp => wp.WorkoutDays)
                 .HasForeignKey(wd => wd.WorkoutProgram_Id)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<WorkoutProgram>()
-                .HasOne(wp => wp.ExerciseWorkoutProgram)
-                .WithMany(ewp => ewp.WorkoutPrograms)
-                .HasForeignKey(wp => wp.ExerciseWorkoutProgram_Id)
+            // ExerciseWorkoutProgram → Exercise
+            modelBuilder.Entity<ExerciseWorkoutProgram>()
+                .HasOne(ewp => ewp.Exercise)
+                .WithMany(e => e.ExerciseWorkoutPrograms)
+                .HasForeignKey(ewp => ewp.Exercise_Id)
+                .OnDelete(DeleteBehavior.NoAction); // ✅ Dette er NØGLEN
+
+            // ExerciseWorkoutProgram → WorkoutProgram
+            modelBuilder.Entity<ExerciseWorkoutProgram>()
+                .HasOne(ewp => ewp.WorkoutProgram)
+                .WithMany(wp => wp.ExerciseWorkoutPrograms)
+                .HasForeignKey(ewp => ewp.WorkoutProgram_Id)
                 .OnDelete(DeleteBehavior.Cascade);
+
         }
     }
 }

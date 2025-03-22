@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FitnessTracker.Server.Models
 {
@@ -8,27 +9,21 @@ namespace FitnessTracker.Server.Models
         [Key]
         public int Exercise_Id { get; set; }
 
-        [Required]
         public string ExerciseName { get; set; }
-
-        [Required]
         public int Set { get; set; }
-
-        [Required]
         public int Repetitions { get; set; }
 
-        public ExerciseWorkoutProgram ExerciseWorkoutProgram { get; set; }
+        public ICollection<ExerciseWorkoutProgram> ExerciseWorkoutPrograms { get; set; }
 
         public Exercise(string exerciseName, int set, int repetitions)
         {
-            this.ExerciseName = exerciseName;
-            this.Set = set;
-            this.Repetitions = repetitions;
+            ExerciseName = exerciseName;
+            Set = set;
+            Repetitions = repetitions;
+            ExerciseWorkoutPrograms = new List<ExerciseWorkoutProgram>();
         }
 
-        public Exercise()
-        {
-        }
+        public Exercise() { }
 
     }
 }

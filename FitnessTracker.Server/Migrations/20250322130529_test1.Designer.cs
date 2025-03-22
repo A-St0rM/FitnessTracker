@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FitnessTracker.Server.Migrations
 {
     [DbContext(typeof(FitnessTrackerDBContext))]
-    [Migration("20250319172324_newMigration")]
-    partial class newMigration
+    [Migration("20250322130529_test1")]
+    partial class test1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -43,14 +43,32 @@ namespace FitnessTracker.Server.Migrations
                     b.Property<int>("Set")
                         .HasColumnType("int");
 
-                    b.Property<int?>("WorkoutProgram_Id")
+                    b.HasKey("Exercise_Id");
+
+                    b.ToTable("exercises");
+                });
+
+            modelBuilder.Entity("FitnessTracker.Server.Models.ExerciseWorkoutProgram", b =>
+                {
+                    b.Property<int>("ExerciseWorkoutProgram_Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.HasKey("Exercise_Id");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ExerciseWorkoutProgram_Id"));
+
+                    b.Property<int>("Exercise_Id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WorkoutProgram_Id")
+                        .HasColumnType("int");
+
+                    b.HasKey("ExerciseWorkoutProgram_Id");
+
+                    b.HasIndex("Exercise_Id");
 
                     b.HasIndex("WorkoutProgram_Id");
 
-                    b.ToTable("exercises");
+                    b.ToTable("exerciseWorkoutPrograms");
                 });
 
             modelBuilder.Entity("FitnessTracker.Server.Models.User", b =>
@@ -112,17 +130,29 @@ namespace FitnessTracker.Server.Migrations
                     b.ToTable("workoutPrograms");
                 });
 
-            modelBuilder.Entity("FitnessTracker.Server.Models.Exercise", b =>
+            modelBuilder.Entity("FitnessTracker.Server.Models.ExerciseWorkoutProgram", b =>
                 {
-                    b.HasOne("FitnessTracker.Server.Models.WorkoutProgram", null)
-                        .WithMany("Exercises")
-                        .HasForeignKey("WorkoutProgram_Id");
+                    b.HasOne("FitnessTracker.Server.Models.Exercise", "Exercise")
+                        .WithMany("ExerciseWorkoutPrograms")
+                        .HasForeignKey("Exercise_Id")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("FitnessTracker.Server.Models.WorkoutProgram", "WorkoutProgram")
+                        .WithMany("ExerciseWorkoutPrograms")
+                        .HasForeignKey("WorkoutProgram_Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Exercise");
+
+                    b.Navigation("WorkoutProgram");
                 });
 
             modelBuilder.Entity("FitnessTracker.Server.Models.WorkoutDay", b =>
                 {
                     b.HasOne("FitnessTracker.Server.Models.WorkoutProgram", "WorkoutProgram")
-                        .WithMany()
+                        .WithMany("WorkoutDays")
                         .HasForeignKey("WorkoutProgram_Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -130,9 +160,16 @@ namespace FitnessTracker.Server.Migrations
                     b.Navigation("WorkoutProgram");
                 });
 
+            modelBuilder.Entity("FitnessTracker.Server.Models.Exercise", b =>
+                {
+                    b.Navigation("ExerciseWorkoutPrograms");
+                });
+
             modelBuilder.Entity("FitnessTracker.Server.Models.WorkoutProgram", b =>
                 {
-                    b.Navigation("Exercises");
+                    b.Navigation("ExerciseWorkoutPrograms");
+
+                    b.Navigation("WorkoutDays");
                 });
 #pragma warning restore 612, 618
         }
